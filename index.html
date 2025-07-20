@@ -1,71 +1,64 @@
-
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-    <title>Markerless AR Video</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
+    <title>Markerless WebAR Video</title>
+    <script src="https://unpkg.com/aframe@1.4.2/dist/aframe.min.js"></script>
+    <script src="https://unpkg.com/mind-ar@1.2.4/dist/mindar-face-aframe.prod.js"></script>
     <style>
-      .video-controls {
+      body { margin: 0; overflow: hidden; }
+      #buttons {
         position: fixed;
         bottom: 20px;
         right: 20px;
-        z-index: 9999;
+        display: flex;
+        gap: 10px;
+        z-index: 10;
       }
-      .video-controls button {
-        background: #8e44ad;
+      button {
+        background-color: purple;
         color: white;
+        padding: 10px 20px;
         border: none;
-        padding: 10px 16px;
+        border-radius: 12px;
         font-size: 16px;
-        border-radius: 10px;
-        margin-left: 5px;
+        display: flex;
+        align-items: center;
+      }
+      button i {
+        margin-right: 5px;
       }
     </style>
   </head>
-  <body style="margin: 0; overflow: hidden">
-    <a-scene
-      embedded
-      vr-mode-ui="enabled: false"
-      renderer="logarithmicDepthBuffer: true;" 
-      arjs="sourceType: webcam; debugUIEnabled: false;"
-    >
-      <a-assets>
-        <video id="video" src="video.mp4" preload="auto" crossorigin="anonymous" playsinline webkit-playsinline muted></video>
-      </a-assets>
-
-      <a-camera position="0 0 0" look-controls></a-camera>
-
-      <a-video
-        id="myVideo"
-        src="#video"
-        width="1.5"
-        height="0.84"
-        position="0 0 -2"
-        rotation="-90 0 0"
-        autoplay="false"
-        loop="true"
-        visible="true"
-      ></a-video>
-    </a-scene>
-
-    <div class="video-controls">
-      <button onclick="playVideo()">▶ Play</button>
-      <button onclick="pauseVideo()">⏸ Pause</button>
+  <body>
+    <div id="buttons">
+      <button onclick="document.querySelector('video').play()"><i>▶</i> Play</button>
+      <button onclick="document.querySelector('video').pause()"><i>⏸</i> Pause</button>
     </div>
 
-    <script>
-      const vid = document.querySelector("#video");
+    <a-scene
+      mindar-face
+      embedded
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
+      <a-assets>
+        <video id="video" src="video.mp4" preload="auto" playsinline crossorigin="anonymous" loop></video>
+      </a-assets>
 
-      function playVideo() {
-        vid.play().catch((err) => console.warn("Play error:", err));
-      }
+      <a-camera active="true" position="0 0 0"></a-camera>
 
-      function pauseVideo() {
-        vid.pause();
-      }
-    </script>
+      <a-entity mindar-face-target="anchorIndex: 168">
+        <a-plane 
+          src="#video"
+          width="1.5"
+          height="0.85"
+          position="0 0.1 -0.5"
+          rotation="0 0 0"
+          material="shader: flat"
+        ></a-plane>
+      </a-entity>
+    </a-scene>
   </body>
 </html>
