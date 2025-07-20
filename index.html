@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Markerless WebAR Video</title>
-    <script src="https://unpkg.com/aframe@1.4.2/dist/aframe.min.js"></script>
-    <script src="https://unpkg.com/mind-ar@1.2.4/dist/mindar-face-aframe.prod.js"></script>
+    <title>Markerless AR Video</title>
+    <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.4/dist/mindar-face-aframe.prod.js"></script>
     <style>
       body { margin: 0; overflow: hidden; }
       #buttons {
@@ -12,27 +12,23 @@
         right: 20px;
         display: flex;
         gap: 10px;
-        z-index: 10;
+        z-index: 999;
       }
       button {
         background-color: purple;
         color: white;
-        padding: 10px 20px;
+        padding: 10px 16px;
         border: none;
-        border-radius: 12px;
+        border-radius: 10px;
         font-size: 16px;
-        display: flex;
-        align-items: center;
-      }
-      button i {
-        margin-right: 5px;
       }
     </style>
   </head>
+
   <body>
     <div id="buttons">
-      <button onclick="document.querySelector('video').play()"><i>▶</i> Play</button>
-      <button onclick="document.querySelector('video').pause()"><i>⏸</i> Pause</button>
+      <button onclick="document.getElementById('myvideo').play()">▶ Play</button>
+      <button onclick="document.getElementById('myvideo').pause()">⏸ Pause</button>
     </div>
 
     <a-scene
@@ -44,18 +40,26 @@
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
-        <video id="video" src="video.mp4" preload="auto" playsinline crossorigin="anonymous" loop></video>
+        <video
+          id="myvideo"
+          src="video.mp4"
+          loop
+          preload="auto"
+          playsinline
+          crossorigin="anonymous"
+          webkit-playsinline
+        ></video>
       </a-assets>
 
       <a-camera active="true" position="0 0 0"></a-camera>
 
-      <a-entity mindar-face-target="anchorIndex: 168">
-        <a-plane 
-          src="#video"
-          width="1.5"
-          height="0.85"
-          position="0 0.1 -0.5"
+      <a-entity mindar-face-target="anchorIndex: 10">
+        <a-plane
+          position="0 0.5 0"
+          width="1"
+          height="0.6"
           rotation="0 0 0"
+          src="#myvideo"
           material="shader: flat"
         ></a-plane>
       </a-entity>
