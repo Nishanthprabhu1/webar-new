@@ -1,68 +1,76 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
     <title>Markerless AR Video</title>
-    <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.4/dist/mindar-face-aframe.prod.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-ar@1.8.2/dist/aframe-ar.min.js"></script>
     <style>
-      body { margin: 0; overflow: hidden; }
-      #buttons {
+      #controls {
         position: fixed;
         bottom: 20px;
         right: 20px;
+        z-index: 9999;
         display: flex;
         gap: 10px;
-        z-index: 999;
       }
-      button {
-        background-color: purple;
-        color: white;
+      .btn {
         padding: 10px 16px;
         border: none;
-        border-radius: 10px;
+        border-radius: 12px;
+        background-color: purple;
+        color: white;
         font-size: 16px;
       }
     </style>
   </head>
-
-  <body>
-    <div id="buttons">
-      <button onclick="document.getElementById('myvideo').play()">▶ Play</button>
-      <button onclick="document.getElementById('myvideo').pause()">⏸ Pause</button>
+  <body style="margin: 0; overflow: hidden">
+    <!-- Play/Pause Buttons -->
+    <div id="controls">
+      <button class="btn" onclick="playVideo()">▶️ Play</button>
+      <button class="btn" onclick="pauseVideo()">⏸️ Pause</button>
     </div>
 
     <a-scene
-      mindar-face
-      embedded
-      color-space="sRGB"
-      renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false"
+      embedded
+      arjs="sourceType: webcam; debugUIEnabled: false;"
+      renderer="logarithmicDepthBuffer: true;"
     >
       <a-assets>
         <video
-          id="myvideo"
+          id="myVid"
           src="video.mp4"
-          loop
           preload="auto"
-          playsinline
+          loop
           crossorigin="anonymous"
+          playsinline
           webkit-playsinline
         ></video>
       </a-assets>
 
-      <a-camera active="true" position="0 0 0"></a-camera>
+      <!-- Flat video in front of camera -->
+      <a-video
+        src="#myVid"
+        width="1.2"
+        height="0.675"
+        position="0 0 -2"
+        rotation="0 0 0"
+        autoplay="false"
+      ></a-video>
 
-      <a-entity mindar-face-target="anchorIndex: 10">
-        <a-plane
-          position="0 0.5 0"
-          width="1"
-          height="0.6"
-          rotation="0 0 0"
-          src="#myvideo"
-          material="shader: flat"
-        ></a-plane>
-      </a-entity>
+      <a-camera-static />
     </a-scene>
+
+    <script>
+      const video = document.getElementById("myVid");
+      function playVideo() {
+        video.play();
+      }
+      function pauseVideo() {
+        video.pause();
+      }
+    </script>
   </body>
 </html>
